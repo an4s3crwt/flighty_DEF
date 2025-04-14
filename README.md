@@ -1,1 +1,1 @@
-/flight-tracking
+/flight-tracker
