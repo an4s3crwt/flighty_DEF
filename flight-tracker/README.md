@@ -1,32 +1,16 @@
-# Flight Tracker System
+# Flight Tracker
 
-A Laravel-based flight tracking system to monitor flight schedules, statuses, departures, arrivals, and aircraft information.
+Laravel-based system for tracking flight schedules, statuses, and aircraft information.
 
 ## Features
 
-- **Flight Management**:
-  - Track flight details (callsign, status, aircraft)
-  - Monitor departure/arrival airports and scheduled times
-- **Departures & Arrivals**:
-  - Real-time status tracking
-  - Schedule monitoring
-- **Aircraft Registry**:
-  - ICAO codes, registration details
-  - Model and manufacturer information
-- **Airport Database**:
-  - ICAO/IATA codes
-  - Location data and timezones
-- **Airline Directory**:
-  - Comprehensive airline details
+- Flight details (callsign, status, aircraft)
+- Departure/arrival tracking
+- Aircraft registry
+- Airport database
+- Airline directory
 
-## 🚀 Installation
-
-### Prerequisites
-- PHP 8.0+
-- Composer
-- MySQL/SQLite
-
-### Setup Steps
+## Setup
 
 1. Clone the repository:
 
@@ -56,3 +40,4 @@ A Laravel-based flight tracking system to monitor flight schedules, statuses, de
     php artisan serve
 
 
+// - //
