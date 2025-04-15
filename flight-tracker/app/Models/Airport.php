@@ -22,4 +22,14 @@ class Airport extends Model
     protected $fillable = [
         'icao', 'iata', 'name', 'city', 'country', 'latitude', 'longitude', 'timezone'
     ];
+
+    public function departingFlights(){
+        return $this->hasMany(Flight::class, 'departure_airport', 'icao');
+    }
+    public function arrivingFlights(){
+        return $this->hasMany(Flight::class, 'arrival_airport', 'icao');
+    }
+
+
+
 }

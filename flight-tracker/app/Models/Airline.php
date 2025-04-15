@@ -13,11 +13,19 @@ class Airline extends Model
 
     protected $primaryKey = 'airline_icao';
 
+    // To indicate that the PK is not auto-incrementable (bc ICAO is a string)
     public $incrementing = false;
 
     protected $fillable = [
         'airline_icao', 'name', 'country'
     ];
 
+
+    public function aircraft(){
+        return $this->hasMany(Aircraft::class, 'airline_icao', 'icao');
+    }
+
     
+
+
 }

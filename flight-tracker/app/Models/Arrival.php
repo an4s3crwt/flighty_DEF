@@ -12,6 +12,7 @@ class Arrival extends Model
     protected $table = 'arrivals';
 
     protected $primaryKey = 'arrival_id';
+    
 
     protected $fillable = [
         'flight_id', 'arrival_airport', 'scheduled_arrival', 'status'
@@ -21,4 +22,8 @@ class Arrival extends Model
     protected $casts = [
         'scheduled_arrival' => 'datetime'
     ];
+
+
+
+
 }

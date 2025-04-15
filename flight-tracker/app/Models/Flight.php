@@ -26,4 +26,29 @@ class Flight extends Model
         'actual_departure' => 'datetime',
         'actual_arrival' => 'datetime',
     ];
+
+
+
+
+    public function aircraft(){
+        return $this->belongsTo(Aircraft::class, 'aircraft_icao', 'icao24');
+    }
+
+    public function departureAirport(){
+        return $this->belongsTo(Airport::class,'departure_airport', 'icao');
+    }
+
+
+    public function arrivalAirport(){
+        return $this->belongsTo(Airport::class, 'arrival_airport', 'icao');
+    }
+
+
+    public function flightPositions(){
+        return $this->hasMany(FlightPosition::class, 'flight_id');
+    }
+
+    ///añadir users
+
 }
+
