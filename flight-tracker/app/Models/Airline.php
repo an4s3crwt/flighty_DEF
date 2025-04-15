@@ -22,10 +22,10 @@ class Airline extends Model
 
 
     public function aircraft(){
-        return $this->hasMany(Aircraft::class, 'airline_icao', 'icao');
+        return $this->hasMany(Aircraft::class, 'airline_icao', 'airline_icao');
     }
 
-    
+
 
 
 }
