@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Flight;
 use Illuminate\Http\Request;
+use App\Models\FlightPosition;
 
 class FlightController extends Controller
 {
@@ -11,7 +12,11 @@ class FlightController extends Controller
      */
     public function index()
     {
-        return response()->json(Flight::with('positions')->get());
+        return response()->json(
+            Flight::with('positions')
+                ->limit(2500)
+                ->get()
+        );
     }
 
 
@@ -23,6 +28,5 @@ class FlightController extends Controller
 
         return $response()->json($flight);
     }
-    
     
 }

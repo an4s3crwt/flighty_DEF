@@ -47,6 +47,13 @@ class Flight extends Model
     public function flightPositions(){
         return $this->hasMany(FlightPosition::class, 'flight_id');
     }
+  
+
+public function positions()
+{
+    return $this->hasMany(FlightPosition::class, 'flight_id');
+}
+
 
     ///añadir users
 

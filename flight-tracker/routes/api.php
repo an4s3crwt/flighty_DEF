@@ -23,11 +23,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route:prefix('api')->group(function(){
+
     Route::get('/aircraft/{icao24}', [AircraftController::class, 'show']);
     Route::get('/airlines/{icao}', [AirlineController::class, 'show']);
     Route::get('/airports/{icao}', [AirportController::class, 'show']);
     Route::get('/flights', [FlightController::class, 'index']);
     Route::get('/flights/by-hex/{icao24}', [FlightController::class, 'byHex']);
 
-});
