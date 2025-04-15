@@ -2,7 +2,11 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\AircraftController;
+use App\Http\Controllers\AirlineController;
+use App\Http\Controllers\AirportController;
+use App\Http\Controllers\FlightController;
+use App\Http\Controllers\FlightPositionController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -16,4 +20,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+
+Route:prefix('api')->group(function(){
+    Route::get('/aircraft/{icao24}', [AircraftController::class, 'show']);
+    Route::get('/airlines/{icao}', [AirlineController::class, 'show']);
+    Route::get('/airports/{icao}', [AirportController::class, 'show']);
+    Route::get('/flights', [FlightController::class, 'index']);
+    Route::get('/flights/by-hex/{icao24}', [FlightController::class, 'byHex']);
+
 });
