@@ -25,8 +25,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
     Route::get('/aircraft/{icao24}', [AircraftController::class, 'show']);
-    Route::get('/airlines/{icao}', [AirlineController::class, 'show']);
-    Route::get('/airports/{icao}', [AirportController::class, 'show']);
+    Route::get('/airports/{icao}/departures', [AirportController::class, 'departures']);
+    Route::get('/airports/{icao}/arrivals', [AirportController::class, 'arrivals']);
     Route::get('/flights', [FlightController::class, 'index']);
     Route::get('/flights/by-hex/{icao24}', [FlightController::class, 'byHex']);
 

@@ -5,20 +5,21 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use \App\Console\Commands\FetchOpenSkyData;
-
+use \App\Console\Commands\FetchAirportData;
 class Kernel extends ConsoleKernel
 {
 
 
     protected $commands = [
         FetchOpenSkyData::class,
+        FetchAirportData::class,
     ];
     /**
      * Define the application's command schedule.
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->command('fetch:opensky')->everyFiveMinutes();
     }
 
     /**

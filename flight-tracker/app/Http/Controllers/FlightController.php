@@ -13,7 +13,12 @@ class FlightController extends Controller
     public function index()
     {
         return response()->json(
-            Flight::with('positions')
+            Flight::with([
+                'positions',
+                'aircraft',
+                'departure',
+                'arrival',
+            ])
                 ->limit(2500)
                 ->get()
         );
