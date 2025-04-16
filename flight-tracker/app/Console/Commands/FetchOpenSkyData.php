@@ -5,6 +5,8 @@ use App\Models\Aircraft;
 use App\Models\Flight;
 use App\Models\FlightPosition;
 use Illuminate\Console\Command;
+
+use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
 
 class FetchOpenSkyData extends Command
@@ -94,6 +96,16 @@ class FetchOpenSkyData extends Command
                 'heading' => $heading,
             ]);
         }
+
+        Cache::put("flight:{$icao24}", [
+            'latitutde' => $latitude,
+            'longitude' => $longitude,
+            'altitude' => $altitude,
+            'speed' => $velocity,
+            'heading' => $heading,
+            'timestamp' => $timestamp,
+        ], now()->addMinutes(5)); //esto guarda la última posición en redis
+
 
         $this->info('✅ Datos importados correctamente.');
     }
