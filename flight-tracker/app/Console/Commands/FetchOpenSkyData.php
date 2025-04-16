@@ -74,7 +74,7 @@ class FetchOpenSkyData extends Command
             );
 
             // Step 2: Flight (create or update flight record based on callsign)
-            $flight = Flight::firstOrCreate(
+            /*$flight = Flight::firstOrCreate(
                 [
                     'aircraft_icao' => $icao24,
                     'callsign' => $callsign,
@@ -83,7 +83,44 @@ class FetchOpenSkyData extends Command
                     'departure_airport' => '',  // Default airport (can be updated later)
                     'arrival_airport' => ''   // Default airport (can be updated later)
                 ]
+            );*/
+
+            $flight = Flight::firstOrCreate(
+                [
+                    'aicraft_icao' => $icao24,
+                    'callsign' => $callsign,
+                    'scheduled_departure' => Carbon::createFromTimestamp($timestamp)->startOfHour(),
+                ],
+                [
+                    'status' => '',
+                    'departure_airport' => '',
+                    'arrival_airport' => ''
+                ]
             );
+
+
+            //obtener la ruta desde HexDB si el callsign de opensky data es válido
+            if($callsign && strlen($callsign) >=3) {
+                $routeText = @file_get_contents("https://hexdb.io/callsign-route-iata?callsign=" . urlencode($callsign));
+
+                if($routeText && str_contains($routeText, "→")){
+                    [$departureIata, $arrivalIata] = array_map('trim', explode('→', $routeText));
+
+                    // buscar aeropuertos en base a IATA
+                    $departureAirport = \App\Models\Airport::where('iata', $departureIata)->first();
+                    $arrivalAirport = \App\Models\Airport::where('iata', $arrivalIata)->first();
+
+
+                    if($departureAirport && arrivalAirport){
+                        $flight->departure_airport = $departureAirport->icao;
+                        $flight->arrival_airport = $arrivalAirport->icao;
+                        $flight->save();
+
+
+                    
+                    }
+                }
+            }
 
             // Step 3: FlightPosition (create a new position record for each update)
             FlightPosition::create([
@@ -101,11 +138,19 @@ class FetchOpenSkyData extends Command
             'latitutde' => $latitude,
             'longitude' => $longitude,
             'altitude' => $altitude,
-            'speed' => $velocity,
+            'speed' => $velocity, 
             'heading' => $heading,
             'timestamp' => $timestamp,
         ], now()->addMinutes(5)); //esto guarda la última posición en redis
 
+        event(new \App\Events\FlightPositionUpdated($icao24, [
+            'latitude' => $latitude,
+            'longitude' => $longitude,
+            'altitude' => $altitude,
+            'speed' => $velocity,
+            'heading' => $heading,
+            'timestamp' => $timestamp,
+        ]));
 
         $this->info('✅ Datos importados correctamente.');
     }
