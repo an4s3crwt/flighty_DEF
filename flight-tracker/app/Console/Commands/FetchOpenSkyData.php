@@ -37,6 +37,11 @@ class FetchOpenSkyData extends Command
             return;
         }
 
+
+        $maxFlights = 2500;
+$data['states'] = array_slice($data['states'], 0, $maxFlights);
+
+
         foreach ($data['states'] as $state) {
             // Map OpenSky data to local fields
             $icao24 = $state[0];                 // ICAO 24-bit address
@@ -87,7 +92,7 @@ class FetchOpenSkyData extends Command
 
             $flight = Flight::firstOrCreate(
                 [
-                    'aicraft_icao' => $icao24,
+                    'aircraft_icao' => $icao24,
                     'callsign' => $callsign,
                     'scheduled_departure' => Carbon::createFromTimestamp($timestamp)->startOfHour(),
                 ],
@@ -111,13 +116,13 @@ class FetchOpenSkyData extends Command
                     $arrivalAirport = \App\Models\Airport::where('iata', $arrivalIata)->first();
 
 
-                    if($departureAirport && arrivalAirport){
+                    if($departureAirport && $arrivalAirport){
                         $flight->departure_airport = $departureAirport->icao;
                         $flight->arrival_airport = $arrivalAirport->icao;
                         $flight->save();
 
 
-                    
+                        
                     }
                 }
             }
@@ -132,25 +137,27 @@ class FetchOpenSkyData extends Command
                 'speed' => $velocity,  // Changed from velocity to speed (check your DB schema)
                 'heading' => $heading,
             ]);
+
+            Cache::put("flight:{$icao24}", [
+                'latitude' => $latitude,
+                'longitude' => $longitude,
+                'altitude' => $altitude,
+                'speed' => $velocity, 
+                'heading' => $heading,
+                'timestamp' => $timestamp,
+            ], now()->addMinutes(1)); //esto guarda la última posición en redis
+    
+            event(new \App\Events\FlightPositionUpdated($icao24, [
+                'latitude' => $latitude,
+                'longitude' => $longitude,
+                'altitude' => $altitude,
+                'speed' => $velocity,
+                'heading' => $heading,
+                'timestamp' => $timestamp,
+            ]));
         }
 
-        Cache::put("flight:{$icao24}", [
-            'latitutde' => $latitude,
-            'longitude' => $longitude,
-            'altitude' => $altitude,
-            'speed' => $velocity, 
-            'heading' => $heading,
-            'timestamp' => $timestamp,
-        ], now()->addMinutes(5)); //esto guarda la última posición en redis
-
-        event(new \App\Events\FlightPositionUpdated($icao24, [
-            'latitude' => $latitude,
-            'longitude' => $longitude,
-            'altitude' => $altitude,
-            'speed' => $velocity,
-            'heading' => $heading,
-            'timestamp' => $timestamp,
-        ]));
+       
 
         $this->info('✅ Datos importados correctamente.');
     }

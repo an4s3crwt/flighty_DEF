@@ -27,6 +27,16 @@ class AirportController extends Controller
             'region_name' => $airport->region_name ?? 'Unknown',
         ]);
     }
+
+    public function show($icao){
+        $airport = \App\Models\Airport::where('icao', $icao)->first();
+
+        if(!$airport) {
+            return response()->json(['error' => 'Airport not found¡'], 404);
+        }
+
+        return response()->json($airport);
+    }
 }
    
 
